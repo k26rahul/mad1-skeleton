@@ -5,7 +5,7 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-# ======== User ========
+# ================= User =================
 
 
 class User(db.Model, UserMixin):
@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
   id = Column(Integer, primary_key=True, autoincrement=True)
   email = Column(String, unique=True, nullable=False)
   password = Column(String, nullable=False)
+  name = Column(String, nullable=False)
   type = Column(String)  # 'admin', 'doctor', 'patient'
 
   admin = relationship('Admin', back_populates='user', uselist=False)
@@ -20,18 +21,41 @@ class User(db.Model, UserMixin):
   patient = relationship('Patient', back_populates='user', uselist=False)
 
 
-# ======== Admin ========
+# ================= Admin =================
 
 class Admin(db.Model):
   __tablename__ = 'admins'
   id = Column(Integer, primary_key=True, autoincrement=True)
-  name = Column(String)
-  phone_num = Column(String)
   user_id = Column(Integer, ForeignKey('users.id'))
   user = relationship('User', back_populates='admin')
 
 
-# ======== Department ========
+# ================= Doctor =================
+
+class Doctor(db.Model):
+  __tablename__ = 'doctors'
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  dept_id = Column(Integer, ForeignKey('departments.id'))
+  user_id = Column(Integer, ForeignKey('users.id'))
+
+  user = relationship('User', back_populates='doctor')
+  department = relationship('Department', back_populates='doctors')
+  appointments = relationship('Appointment', back_populates='doctor')
+
+
+# ================= Patient =================
+
+class Patient(db.Model):
+  __tablename__ = 'patients'
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  dob = Column(Date)
+  user_id = Column(Integer, ForeignKey('users.id'))
+
+  user = relationship('User', back_populates='patient')
+  appointments = relationship('Appointment', back_populates='patient')
+
+
+# ================= Department =================
 
 class Department(db.Model):
   __tablename__ = 'departments'
@@ -41,36 +65,8 @@ class Department(db.Model):
   doctors = relationship('Doctor', back_populates='department')
 
 
-# ======== Doctor ========
+# ================= Appointment =================
 
-class Doctor(db.Model):
-  __tablename__ = 'doctors'
-  id = Column(Integer, primary_key=True, autoincrement=True)
-  name = Column(String)
-  phone_num = Column(String)
-  dept_id = Column(Integer, ForeignKey('departments.id'))
-  user_id = Column(Integer, ForeignKey('users.id'))
-
-  user = relationship('User', back_populates='doctor')
-  department = relationship('Department', back_populates='doctors')
-  appointments = relationship('Appointment', back_populates='doctor')
-
-
-# ======== Patient ========
-
-class Patient(db.Model):
-  __tablename__ = 'patients'
-  id = Column(Integer, primary_key=True, autoincrement=True)
-  name = Column(String)
-  phone_num = Column(String)
-  dob = Column(Date)
-  user_id = Column(Integer, ForeignKey('users.id'))
-
-  user = relationship('User', back_populates='patient')
-  appointments = relationship('Appointment', back_populates='patient')
-
-
-# ======== Appointment ========
 
 class Appointment(db.Model):
   __tablename__ = 'appointments'
@@ -79,14 +75,14 @@ class Appointment(db.Model):
   doctor_id = Column(Integer, ForeignKey('doctors.id'))
   date = Column(Date)
   time = Column(Time)
-  status = Column(String, default='pending')  # pending, scheduled, completed
+  status = Column(String, default='scheduled')  # scheduled, completed
 
   patient = relationship('Patient', back_populates='appointments')
   doctor = relationship('Doctor', back_populates='appointments')
   treatment = relationship('Treatment', back_populates='appointment', uselist=False)
 
 
-# ======== Treatment ========
+# ================= Treatment =================
 
 class Treatment(db.Model):
   __tablename__ = 'treatments'
@@ -94,7 +90,7 @@ class Treatment(db.Model):
   appointment_id = Column(Integer, ForeignKey('appointments.id'), unique=True)
   diagnosis = Column(String)
   prescription = Column(String)
-  notes = Column(String)
   tests = Column(String)
+  notes = Column(String)
 
   appointment = relationship('Appointment', back_populates='treatment')
