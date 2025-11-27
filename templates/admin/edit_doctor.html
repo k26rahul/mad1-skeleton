@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Doctor</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+
+    <h2>Edit Doctor</h2>
+
+    <form method="POST">
+      <label>Name</label>
+      <input type="text" name="name" value="{{ doctor.user.name }}" required>
+
+      <label>Email</label>
+      <input type="email" name="email" value="{{ doctor.user.email }}" required>
+
+      <label>Department</label>
+      <select name="dept_id" required>
+        {% for dept in departments %}
+          <option value="{{ dept.id }}"
+                  {% if dept.id == doctor.dept_id %}selected{% endif %}>
+            {{ dept.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button type="submit">Save</button>
+    </form>
+
+    <p class="link">
+      <a href="/admin/home">Back</a>
+    </p>
+
+  </body>
+</html>

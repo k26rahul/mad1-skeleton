@@ -1,0 +1,82 @@
+/* -----------------------
+   General page layout
+------------------------*/
+body {
+  font-family: sans-serif;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+/* -----------------------
+   Page heading
+------------------------*/
+h1,
+h2 {
+  margin-bottom: 20px;
+}
+
+/* -----------------------
+   Links
+------------------------*/
+a {
+  display: inline-block;
+  margin: 8px 0;
+  text-decoration: none;
+  color: #0066cc;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------
+   Form layout
+------------------------*/
+form {
+  text-align: left;
+  max-width: 360px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 14px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+  background: white;
+}
+
+/* -----------------------
+   Buttons
+------------------------*/
+button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: #0066cc;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0055aa;
+}
+
+/* small paragraph links below forms */
+p.link {
+  text-align: center;
+  margin-top: 15px;
+}

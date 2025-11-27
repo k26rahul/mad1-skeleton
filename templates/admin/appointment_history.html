@@ -1,0 +1,49 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Patient History{% endblock %}
+
+{% block content %}
+
+  <h2>Patient History</h2>
+  <p>{{ patient.user.name }} — complete appointment records</p>
+
+  <a href="/admin/home" class="btn btn-sm btn-secondary mb-3">← Back</a>
+
+  <section class="table-section">
+    <table id="historyTable" class="display">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Doctor</th>
+          <th>Status</th>
+          <th>Diagnosis</th>
+          <th>Prescription</th>
+          <th>Tests</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.doctor.user.name }}</td>
+            <td>{{ a.status }}</td>
+            <td>{{ a.treatment.diagnosis if a.treatment else '—' }}</td>
+            <td>{{ a.treatment.prescription if a.treatment else '—' }}</td>
+            <td>{{ a.treatment.tests if a.treatment else '—' }}</td>
+            <td>{{ a.treatment.notes if a.treatment else '—' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+      new DataTable('#historyTable');
+  </script>
+
+{% endblock %}

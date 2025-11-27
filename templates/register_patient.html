@@ -3,10 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Patient Registration - Hospital Management</title>
+    <title>Patient Registration - Hospital Management System</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
+
   <body>
-    <h2>Patient Registration Page</h2>
-    <p>Placeholder for patient registration form.</p>
+    <h2>Patient Registration</h2>
+
+    {% if error %}
+    <p style="color: red; text-align: center">{{ error }}</p>
+    {% endif %}
+
+    <form action="/register_patient" method="POST">
+      <label>Name</label>
+      <input type="text" name="name" required />
+
+      <label>Email</label>
+      <input type="email" name="email" required />
+
+      <label>Password</label>
+      <input type="password" name="password" required />
+
+      <label>Date of Birth</label>
+      <input type="date" name="dob" required />
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="link">
+      <a href="/login">Back to Login</a>
+    </p>
   </body>
 </html>

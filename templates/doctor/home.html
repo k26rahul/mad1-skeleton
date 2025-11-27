@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doctor Dashboard - Hospital Management</title>
-  </head>
-  <body>
-    <h2>Doctor Dashboard Home</h2>
-    <p>Welcome to the doctor dashboard.</p>
-  </body>
-</html>
+{% extends "dashboard_base.html" %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+  <h2>Doctor Dashboard</h2>
+  <p>Your schedule and patient list appear here.</p>
+{% endblock %}

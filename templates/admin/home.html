@@ -1,12 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - Hospital Management</title>
-  </head>
-  <body>
-    <h2>Admin Dashboard Home</h2>
-    <p>Welcome to the admin dashboard.</p>
-  </body>
-</html>
+{% extends "dashboard_base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+  <h2>Admin Dashboard</h2>
+
+  <br>
+
+  <!-- ===================== -->
+  <!-- Doctors               -->
+  <!-- ===================== -->
+  <section class="table-section">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="m-0">Doctors</h4>
+      <a href="/admin/doctor/create" class="btn btn-sm btn-success">Add Doctor</a>
+    </div>
+
+    <table id="doctorsTable" class="display">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in doctors %}
+          <tr>
+            <td>{{ d.id }}</td>
+            <td>{{ d.user.name }}</td>
+            <td>{{ d.department.name if d.department else '—' }}</td>
+            <td>{{ d.user.email }}</td>
+            <td>
+              <a href="/admin/doctor/{{ d.id }}/edit" class="btn btn-sm btn-primary">Edit</a>
+              <a href="/admin/doctor/{{ d.id }}/delete" class="btn btn-sm btn-danger">Delete</a>
+
+              {% if d.user.is_blocked %}
+                <a href="/admin/doctor/{{ d.id }}/unblock"
+                   class="btn btn-sm btn-success">Unblock</a>
+              {% else %}
+                <a href="/admin/doctor/{{ d.id }}/block" class="btn btn-sm btn-warning">Block</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </section>
+
+  <!-- ===================== -->
+  <!-- Patients              -->
+  <!-- ===================== -->
+  <section class="table-section">
+
+    <h4>Patients</h4>
+
+    <table id="patientsTable" class="display">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>DOB</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in patients %}
+          <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.user.name }}</td>
+            <td>{{ p.dob }}</td>
+            <td>{{ p.user.email }}</td>
+            <td>
+              <a href="/admin/patient/{{ p.id }}/delete" class="btn btn-sm btn-danger">Delete</a>
+
+              {% if p.user.is_blocked %}
+                <a href="/admin/patient/{{ p.id }}/unblock"
+                   class="btn btn-sm btn-success">Unblock</a>
+              {% else %}
+                <a href="/admin/patient/{{ p.id }}/block" class="btn btn-sm btn-warning">Block</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </section>
+
+  <!-- ===================== -->
+  <!-- Upcoming Appointments -->
+  <!-- ===================== -->
+  <section class="table-section">
+
+    <h4>Upcoming Appointments</h4>
+
+    <table id="appointmentsTable" class="display">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.patient.user.name }}</td>
+            <td>{{ a.doctor.user.name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.status }}</td>
+            <td>
+              <a href="/admin/appointment/{{ a.id }}/history"
+                 class="btn btn-sm btn-secondary">View History</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </section>
+
+  <script>
+      new DataTable('#doctorsTable');
+      new DataTable('#patientsTable');
+      new DataTable('#appointmentsTable');
+  </script>
+
+{% endblock %}

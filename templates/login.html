@@ -3,21 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Hospital Management</title>
+    <title>Login - Hospital Management System</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
+
   <body>
-    <h2>Login Page</h2>
+    <h2>Login</h2>
 
     {% if error %}
-    <p style="color: red">{{ error }}</p>
+    <p style="color: red; text-align: center">{{ error }}</p>
     {% endif %}
 
     <form action="/login" method="POST">
-      <label>Email:</label><br />
-      <input type="email" name="email" required /><br /><br />
-      <label>Password:</label><br />
-      <input type="password" name="password" required /><br /><br />
+      <label>Email</label>
+      <input type="email" name="email" required />
+
+      <label>Password</label>
+      <input type="password" name="password" required />
+
       <button type="submit">Login</button>
     </form>
+
+    <p class="link">
+      <a href="/register_patient">Register as Patient</a>
+    </p>
   </body>
 </html>
