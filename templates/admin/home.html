@@ -94,11 +94,11 @@
   </section>
 
   <!-- ===================== -->
-  <!-- Upcoming Appointments -->
+  <!-- Appointments          -->
   <!-- ===================== -->
   <section class="table-section">
 
-    <h4>Upcoming Appointments</h4>
+    <h4>Appointments</h4>
 
     <table id="appointmentsTable" class="display">
       <thead>
@@ -118,8 +118,8 @@
             <td>{{ a.id }}</td>
             <td>{{ a.patient.user.name }}</td>
             <td>{{ a.doctor.user.name }}</td>
-            <td>{{ a.date }}</td>
-            <td>{{ a.time }}</td>
+            <td>{{ a.slot.date }}</td>
+            <td>{{ a.slot.start_time }}</td>
             <td>{{ a.status }}</td>
             <td>
               <a href="/admin/appointment/{{ a.id }}/history"

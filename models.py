@@ -11,10 +11,12 @@ db = SQLAlchemy()
 class User(db.Model, UserMixin):
   __tablename__ = 'users'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   email = Column(String, unique=True, nullable=False)
   password = Column(String, nullable=False)
   name = Column(String, nullable=False)
-  type = Column(String)  # 'admin', 'doctor', 'patient'
+  type = Column(String)   # 'admin', 'doctor', 'patient'
+
   is_blocked = Column(Boolean, default=False)
 
   admin = relationship('Admin', back_populates='user', uselist=False)
@@ -36,13 +38,21 @@ class Admin(db.Model):
 class Doctor(db.Model):
   __tablename__ = 'doctors'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   dept_id = Column(Integer, ForeignKey('departments.id'))
   user_id = Column(Integer, ForeignKey('users.id'))
 
   user = relationship('User', back_populates='doctor')
   department = relationship('Department', back_populates='doctors')
+
   appointments = relationship(
       'Appointment',
+      back_populates='doctor',
+      cascade="all, delete-orphan"
+  )
+
+  slots = relationship(
+      'SlotReservation',
       back_populates='doctor',
       cascade="all, delete-orphan"
   )
@@ -53,6 +63,7 @@ class Doctor(db.Model):
 class Patient(db.Model):
   __tablename__ = 'patients'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   dob = Column(Date)
   user_id = Column(Integer, ForeignKey('users.id'))
 
@@ -69,25 +80,48 @@ class Patient(db.Model):
 class Department(db.Model):
   __tablename__ = 'departments'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   name = Column(String)
   description = Column(String)
+
   doctors = relationship('Doctor', back_populates='department')
+
+
+# ================= Slot Reservation =================
+# Represents one hour timeslot (reserved or blocked)
+
+class SlotReservation(db.Model):
+  __tablename__ = 'slot_reservations'
+  id = Column(Integer, primary_key=True, autoincrement=True)
+
+  doctor_id = Column(Integer, ForeignKey('doctors.id'), nullable=False)
+  date = Column(Date, nullable=False)
+  start_time = Column(Time, nullable=False)
+  type = Column(String, nullable=False)  # 'booked' (appointment) or 'blocked' (doctor unavailable)
+
+  doctor = relationship('Doctor', back_populates='slots')
+  appointment = relationship(
+      'Appointment',
+      back_populates='slot',
+      uselist=False,
+      cascade="all, delete-orphan"
+  )
 
 
 # ================= Appointment =================
 
-
 class Appointment(db.Model):
   __tablename__ = 'appointments'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   patient_id = Column(Integer, ForeignKey('patients.id'))
   doctor_id = Column(Integer, ForeignKey('doctors.id'))
-  date = Column(Date)
-  time = Column(Time)
+  slot_id = Column(Integer, ForeignKey('slot_reservations.id'))
   status = Column(String, default='scheduled')  # scheduled, completed, canceled
 
   patient = relationship('Patient', back_populates='appointments')
   doctor = relationship('Doctor', back_populates='appointments')
+  slot = relationship('SlotReservation', back_populates='appointment')
   treatment = relationship(
       'Treatment',
       back_populates='appointment',
@@ -101,6 +135,7 @@ class Appointment(db.Model):
 class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = Column(Integer, primary_key=True, autoincrement=True)
+
   appointment_id = Column(Integer, ForeignKey('appointments.id'), unique=True)
   diagnosis = Column(String)
   prescription = Column(String)

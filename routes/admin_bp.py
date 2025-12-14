@@ -15,12 +15,7 @@ admin_bp = Blueprint('admin_bp', __name__, url_prefix='/admin')
 def admin_home():
   doctors = Doctor.query.all()
   patients = Patient.query.all()
-
-  # Only upcoming scheduled appointments
-  appointments = Appointment.query.filter(
-      Appointment.date >= date.today(),
-      Appointment.status == 'scheduled'
-  ).all()
+  appointments = Appointment.query.all()
 
   return render_template(
       'admin/home.html',
